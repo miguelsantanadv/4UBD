@@ -1,0 +1,135 @@
+
+CREATE TABLE UF (
+    CodUF INTEGER PRIMARY KEY,
+    Descricao VARCHAR(2) NOT NULL
+);
+
+CREATE TABLE Cliente (
+    CodCli INTEGER PRIMARY KEY,
+    Nome VARCHAR(40) NOT NULL
+);
+
+
+CREATE TABLE Cidade (
+    CodCid INTEGER PRIMARY KEY,
+    UF_CodUF INTEGER NOT NULL,
+    Descricao VARCHAR(40) NOT NULL,
+    FOREIGN KEY (UF_CodUF) REFERENCES UF(CodUF)
+);
+
+
+CREATE TABLE Bairro (
+    CodB INTEGER PRIMARY KEY,
+    Descricao VARCHAR(40) NOT NULL
+);
+
+
+CREATE TABLE TipoLogradouro (
+    CodTL INTEGER PRIMARY KEY,
+    Descricao VARCHAR(30) NOT NULL
+);
+
+
+CREATE TABLE Logradouro (
+    Codigo INTEGER PRIMARY KEY,
+    Descricao VARCHAR(40) NOT NULL
+);
+
+
+CREATE TABLE Endereco (
+    CodEnt INTEGER PRIMARY KEY,
+    Cidade_CodCid INTEGER NOT NULL,
+    Bairro_CodB INTEGER NOT NULL,
+    Logradouro_Codigo INTEGER NOT NULL,
+    TipoLogradouro_CodTL INTEGER NOT NULL,
+    Numero INTEGER NOT NULL,
+    Complemento VARCHAR(20),
+    TipoEndereco VARCHAR(10),
+    FOREIGN KEY (Cidade_CodCid) REFERENCES Cidade(CodCid),
+    FOREIGN KEY (Bairro_CodB) REFERENCES Bairro(CodB),
+    FOREIGN KEY (Logradouro_Codigo) REFERENCES Logradouro(Codigo),
+    FOREIGN KEY (TipoLogradouro_CodTL) REFERENCES TipoLogradouro(CodTL)
+);
+
+
+CREATE TABLE Telefone (
+    CodTel INTEGER PRIMARY KEY,
+    Cliente_CodCli INTEGER NOT NULL,
+    Descricao VARCHAR(40) NOT NULL,
+    TipoTel VARCHAR(3),
+    FOREIGN KEY (Cliente_CodCli) REFERENCES Cliente(CodCli)
+);
+
+
+CREATE TABLE Email (
+    CodEm INTEGER PRIMARY KEY,
+    Cliente_CodCli INTEGER NOT NULL,
+    Descricao VARCHAR(40) NOT NULL,
+    TipoEmail VARCHAR(10),
+    FOREIGN KEY (Cliente_CodCli) REFERENCES Cliente(CodCli)
+);
+
+
+CREATE TABLE Juridica (
+    CNPJ VARCHAR(18) PRIMARY KEY,
+    Cliente_CodCli INTEGER NOT NULL,
+    InscricaoEstadual VARCHAR(20),
+    FOREIGN KEY (Cliente_CodCli) REFERENCES Cliente(CodCli)
+);
+
+
+CREATE TABLE Fisica (
+    CPF VARCHAR(14) PRIMARY KEY,
+    Cliente_CodCli INTEGER NOT NULL,
+    RG VARCHAR(20),
+    FOREIGN KEY (Cliente_CodCli) REFERENCES Cliente(CodCli)
+);
+
+
+CREATE TABLE Orcamento (
+    CodOrc INTEGER PRIMARY KEY,
+    Cliente_CodCli INTEGER NOT NULL,
+    DataOrc DATE NOT NULL,
+    DataAprov DATE,
+    DataConclusao DATE,
+    Valor FLOAT NOT NULL,
+    Desconto FLOAT,
+    Acrescimo FLOAT,
+    ValorAprov FLOAT,
+    FOREIGN KEY (Cliente_CodCli) REFERENCES Cliente(CodCli)
+);
+
+
+CREATE TABLE ProdutoServico (
+    Codigo INTEGER PRIMARY KEY,
+    Nome VARCHAR(40) NOT NULL,
+    Descricao VARCHAR(40),
+    Preco FLOAT NOT NULL,
+    Definicao CHAR(1) NOT NULL
+);
+
+
+CREATE TABLE ItemOrcamento (
+    CodIOrc INTEGER PRIMARY KEY,
+    Produto_Servico_Codigo INTEGER NOT NULL,
+    Orcamento_CodOrc INTEGER NOT NULL,
+    Qtde INTEGER NOT NULL,
+    Valor FLOAT NOT NULL,
+    Aprovado CHAR(1),
+    Desconto FLOAT,
+    Acrescimo FLOAT,
+    ValorAprov FLOAT,
+    FOREIGN KEY (Produto_Servico_Codigo) REFERENCES ProdutoServico(Codigo),
+    FOREIGN KEY (Orcamento_CodOrc) REFERENCES Orcamento(CodOrc)
+);
+
+CREATE TABLE OS (
+    CodOS INTEGER PRIMARY KEY,
+    Orcamento_CodOrc INTEGER NOT NULL,
+    DataAprov DATE NOT NULL,
+    DataConclusao DATE,
+    ValorAprov FLOAT,
+    Desconto FLOAT,
+    Acrescimo FLOAT,
+    FOREIGN KEY (Orcamento_CodOrc) REFERENCES Orcamento(CodOrc)
+);
